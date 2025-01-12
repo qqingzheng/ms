@@ -1,4 +1,0 @@
-aio_pika==9.5.4
-pydantic
-sqlalchemy[asyncio]
-asyncmy
