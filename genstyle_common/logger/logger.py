@@ -1,7 +1,7 @@
 import os
 import json
 import aio_pika
-from common.conn.rabbitmq import get_rabbitmq_connection
+from ..conn.rabbitmq import get_rabbitmq_connection
 
 async def log(type, message, error_type=None, error_file=None, traceback=None):
     connection = await get_rabbitmq_connection()
