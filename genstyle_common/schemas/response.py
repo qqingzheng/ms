@@ -1,4 +1,5 @@
 from pydantic import BaseModel
 
 class ErrorResponse(BaseModel):
-    message: str
+    status: str = "error"
+    message: str = "Unknown error"
