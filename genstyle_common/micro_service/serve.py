@@ -25,15 +25,15 @@ async def register_service(handler: BaseHandler):
             if hasattr(method, '_queue_name') and hasattr(method, '_request_model'):
                 # 声明队列
                 registered_methods.append(method)
-                # queue = await channel.declare_queue(method._queue_name)
-                # # 注册消费者
-                # await queue.consume(
-                #     lambda message: handler_instance.process_message(
-                #         message,
-                #         request_model=method._request_model,
-                #         handler_func=method
-                #     )
-                # )
+                queue = await channel.declare_queue(method._queue_name)
+                # 注册消费者
+                await queue.consume(
+                    lambda message: handler_instance.process_message(
+                        message,
+                        request_model=method._request_model,
+                        handler_func=method
+                    )
+                )
         await log(type="info", message=f"服务注册完成 {str(registered_methods)}")
         try:
             await asyncio.Future()  # 持续运行
