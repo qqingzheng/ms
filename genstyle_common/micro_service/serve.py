@@ -8,16 +8,13 @@ async def register_service(handlers: list[BaseHandler]):
     """注册服务"""
     print("服务注册中", flush=True)
     # 连接到 RabbitMQ
-    await log(type="info", message=f"服务注册中")
     connection = await get_rabbitmq_connection()
     async with connection:
         channel = await connection.channel()
         exchange = channel.default_exchange
         # 初始化处理器
         for handler in handlers:
-            print(f"注册处理器: {handler}", flush=True)
             handler_instance = handler(exchange)
-            print(f"服务名: {os.getenv('SERVICE_NAME')}/{handler.hanlder_name}", flush=True)
             queue = await channel.declare_queue(f"{os.getenv('SERVICE_NAME')}_{handler.hanlder_name}")
             # 注册消费者
             await queue.consume(
@@ -25,8 +22,8 @@ async def register_service(handlers: list[BaseHandler]):
                     message
                 )
             )
-            print(f"服务注册完成 {handler}", flush=True)
-        await log(type="info", message=f"服务注册完成 {str(handlers)}")
+            print(f"服务已注册： {os.getenv('SERVICE_NAME')}/{handler.hanlder_name}", flush=True)
+        await log(type="info", message=f"服务注册完成")
         try:
             await asyncio.Future()  # 持续运行
         finally:
