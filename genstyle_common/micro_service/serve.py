@@ -8,7 +8,7 @@ async def register_service(handler: BaseHandler):
     """注册服务"""
     
     # 连接到 RabbitMQ
-    log(type="info", message=f"服务注册中", service_name=os.getenv('SERVICE_NAME'))
+    log(type="info", message=f"服务注册中")
     connection = await get_rabbitmq_connection()
     async with connection:
         channel = await connection.channel()
