@@ -21,9 +21,7 @@ async def register_service(handlers: list[BaseHandler]):
             # 注册消费者
             await queue.consume(
                 lambda message: handler_instance.process_message(
-                    message,
-                    request_model=handler.request_model,
-                    handler_func=handler
+                    message
                 )
             )
             print(f"服务注册完成 {handler}", flush=True)
