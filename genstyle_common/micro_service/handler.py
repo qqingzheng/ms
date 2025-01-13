@@ -33,7 +33,7 @@ class BaseHandler:
                 try:
                     request_data = self.request_model(**body)
                 except ValidationError as e:
-                    raise Exception(f"Request data validation failed: {e}")
+                    raise Exception(f"Request data validation failed: {body} Error: {e}")
 
                 # 调用具体处理函数
                 response = await self.handle(request_data)
