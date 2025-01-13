@@ -20,7 +20,7 @@ async def log(type, message, error_type=None, error_file=None, traceback=None):
                         "traceback": traceback
                     }).encode()
                 ),
-                routing_key="main_logs"
+                routing_key="monitor_log"
             )
         elif type == "warning":
             await channel.default_exchange.publish(
@@ -31,7 +31,7 @@ async def log(type, message, error_type=None, error_file=None, traceback=None):
                         "message": message
                     }).encode()
                 ),
-                routing_key="main_logs"
+                routing_key="monitor_log"
             )
         else:
             await channel.default_exchange.publish(
@@ -42,5 +42,5 @@ async def log(type, message, error_type=None, error_file=None, traceback=None):
                         "message": message
                     }).encode()
                 ),
-                routing_key="main_logs"
+                routing_key="monitor_log"
             )
