@@ -8,7 +8,7 @@ async def register_service(handler: BaseHandler):
     """注册服务"""
     
     # 连接到 RabbitMQ
-    log(type="info", message=f"服务注册中")
+    await log(type="info", message=f"服务注册中")
     connection = await get_rabbitmq_connection()
     async with connection:
         channel = await connection.channel()
@@ -34,7 +34,7 @@ async def register_service(handler: BaseHandler):
                 #         handler_func=method
                 #     )
                 # )
-        log(type="info", message=f"服务注册完成 {str(registered_methods)}")
+        await log(type="info", message=f"服务注册完成 {str(registered_methods)}")
         try:
             await asyncio.Future()  # 持续运行
         finally:
