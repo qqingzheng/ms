@@ -13,15 +13,15 @@ async def register_service(handlers: list[BaseHandler]):
         channel = await connection.channel()
         exchange = channel.default_exchange
         # 初始化处理器
+        handler_instances = []
         for handler in handlers:
             handler_instance = handler(exchange)
             queue = await channel.declare_queue(f"{os.getenv('SERVICE_NAME')}_{handler.hanlder_name}")
             # 注册消费者
             await queue.consume(
-                lambda message: handler_instance.process_message(
-                    message
-                )
+                handler_instance.process_message
             )
+            handler_instances.append(handler_instance)
             print(f"服务已注册： {os.getenv('SERVICE_NAME')}/{handler.hanlder_name}", flush=True)
         await log(type="info", message=f"服务注册完成")
         try:
