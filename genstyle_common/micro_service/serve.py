@@ -21,6 +21,7 @@ async def register_service(handler: BaseHandler):
             if hasattr(method, '_queue_name') and hasattr(method, '_request_model'):
                 # 声明队列
                 print(method, method._queue_name)
+                return
                 queue = await channel.declare_queue(method._queue_name)
                 # 注册消费者
                 await queue.consume(
