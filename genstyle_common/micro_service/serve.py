@@ -20,17 +20,16 @@ async def register_service(handler: BaseHandler):
             # 检查是否是处理器函数
             if hasattr(method, '_queue_name') and hasattr(method, '_request_model'):
                 # 声明队列
-                print(method, method._queue_name)
-                return
-                queue = await channel.declare_queue(method._queue_name)
-                # 注册消费者
-                await queue.consume(
-                    lambda message: handler_instance.process_message(
-                        message,
-                        request_model=method._request_model,
-                        handler_func=method
-                    )
-                )
+                print("error")
+                # queue = await channel.declare_queue(method._queue_name)
+                # # 注册消费者
+                # await queue.consume(
+                #     lambda message: handler_instance.process_message(
+                #         message,
+                #         request_model=method._request_model,
+                #         handler_func=method
+                #     )
+                # )
 
         try:
             await asyncio.Future()  # 持续运行
