@@ -9,12 +9,16 @@ from ..schemas import ErrorResponse
 
 class BaseHandler:
     """基础消息处理器，提供通用逻辑"""
+
     request_model: Type[BaseModel]
     response_model: Type[BaseModel]
     hanlder_name: str
-    
+
     def __init__(self, exchange: aio_pika.Exchange):
         self.exchange = exchange
+
+    async def handle(self, request_data):
+        pass
 
     async def process_message(
         self,
@@ -35,7 +39,7 @@ class BaseHandler:
                     return response
 
                 # 调用具体处理函数
-                response = await self.__call__(request_data)
+                response = self.response_model(**await self.handle(request_data))
             except Exception as e:
                 response = ErrorResponse(message=f"{str(e)}")
 
@@ -48,4 +52,3 @@ class BaseHandler:
                     ),
                     routing_key=message.reply_to,
                 )
-

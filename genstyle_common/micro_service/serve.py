@@ -17,7 +17,8 @@ async def register_service(handlers: list[BaseHandler]):
         for handler in handlers:
             print(f"注册处理器: {handler}", flush=True)
             handler_instance = handler(exchange)
-            queue = await channel.declare_queue(handler.hanlder_name)
+            print(f"服务名: {os.getenv('SERVICE_NAME')}/{handler.hanlder_name}", flush=True)
+            queue = await channel.declare_queue(f"{os.getenv('SERVICE_NAME')}_{handler.hanlder_name}")
             # 注册消费者
             await queue.consume(
                 lambda message: handler_instance.process_message(
