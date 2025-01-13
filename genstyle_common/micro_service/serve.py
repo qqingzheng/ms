@@ -34,7 +34,7 @@ async def register_service(handler: BaseHandler):
                 #         handler_func=method
                 #     )
                 # )
-        log(type="info", message=f"服务注册完成 {str(registered_methods)}", service_name=os.getenv('SERVICE_NAME'))
+        log(type="info", message=f"服务注册完成 {str(registered_methods)}")
         try:
             await asyncio.Future()  # 持续运行
         finally:
