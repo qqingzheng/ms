@@ -39,7 +39,6 @@ class BaseHandler:
                     return response
 
                 # 调用具体处理函数
-                print("处理请求", flush=True)
                 response = await self.handle(request_data)
             except Exception as e:
                 response = ErrorResponse(message=f"{str(e)}")
