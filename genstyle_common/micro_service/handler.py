@@ -39,7 +39,7 @@ class BaseHandler:
                     return response
 
                 # 调用具体处理函数
-                response = self.response_model(**await self.handle(request_data))
+                response = await self.handle(request_data)
             except Exception as e:
                 response = ErrorResponse(message=f"{str(e)}")
 
