@@ -5,7 +5,7 @@ from pydantic import BaseModel
 import aio_pika
 from pydantic import ValidationError
 from ..schemas import ErrorResponse
-
+import traceback
 
 class BaseHandler:
     """基础消息处理器，提供通用逻辑"""
@@ -38,7 +38,7 @@ class BaseHandler:
                 # 调用具体处理函数
                 response = await self.handle(request_data)
             except Exception as e:
-                response = ErrorResponse(message=f"Parse message error: {str(e)}")
+                response = ErrorResponse(message=f"Parse message error: {str(e)}\n\nBacktrace: {traceback.format_exc()}")
 
             # 如果有 reply_to 队列，发送响应
             if message.reply_to:
