@@ -38,7 +38,7 @@ class BaseHandler:
                 # 调用具体处理函数
                 response = await self.handle(request_data)
             except Exception as e:
-                response = ErrorResponse(message=f"{str(e)}")
+                response = ErrorResponse(message=f"Parse message error: {str(e)}")
 
             # 如果有 reply_to 队列，发送响应
             if message.reply_to:
