@@ -26,7 +26,8 @@ async def register_service(handlers: list[BaseHandler]):
                 aio_pika.Message(
                     body=json.dumps({
                         "service": os.getenv('SERVICE_NAME'),
-                        "handler": handler.hanlder_name
+                        "handler": handler.hanlder_name,
+                        "timeout": handler.timeout
                     }).encode()
                 ),
                 routing_key=queue_name

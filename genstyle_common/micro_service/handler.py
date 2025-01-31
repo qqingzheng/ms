@@ -13,7 +13,8 @@ class BaseHandler:
     request_model: Type[BaseModel]
     response_model: Type[BaseModel]
     hanlder_name: str
-
+    timeout: int = 5
+    
     def __init__(self, exchange: aio_pika.Exchange):
         self.exchange = exchange
 
