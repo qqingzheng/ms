@@ -43,9 +43,13 @@ class BaseHandler:
 
             # 如果有 reply_to 队列，发送响应
             if message.reply_to:
+                try:
+                    body = json.dumps(response.model_dump()).encode()
+                except Exception as e:
+                    body = json.dumps(ErrorResponse(message=f"Response data validation failed").model_dump()).encode()
                 await self.exchange.publish(
                     aio_pika.Message(
-                        body=json.dumps(response.model_dump()).encode(),
+                        body=body,
                         correlation_id=message.correlation_id,
                     ),
                     routing_key=message.reply_to,
