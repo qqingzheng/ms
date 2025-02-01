@@ -6,7 +6,7 @@ import aio_pika
 from pydantic import ValidationError
 from ..schemas import ErrorResponse
 import traceback
-
+from ..exceptions import InnerException
 class BaseHandler:
     """基础消息处理器，提供通用逻辑"""
 
@@ -38,6 +38,8 @@ class BaseHandler:
 
                 # 调用具体处理函数
                 response = await self.handle(request_data)
+            except InnerException as e:
+                response = ErrorResponse(message=f"Service inner exception: {str(e)}")
             except Exception as e:
                 response = ErrorResponse(message=f"Parse message error: {str(e)}\n\nBacktrace: {traceback.format_exc()}")
 
