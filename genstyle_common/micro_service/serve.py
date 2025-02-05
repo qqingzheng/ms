@@ -27,7 +27,9 @@ async def register_service(handlers: list[BaseHandler]):
                     body=json.dumps({
                         "service": os.getenv('SERVICE_NAME'),
                         "handler": handler.hanlder_name,
-                        "timeout": handler.timeout
+                        "timeout": handler.timeout,
+                        "method": handler.method,
+                        "need_auth": handler.need_auth
                     }).encode()
                 ),
                 routing_key=queue_name

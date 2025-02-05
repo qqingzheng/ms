@@ -14,6 +14,8 @@ class BaseHandler:
     response_model: Type[BaseModel]
     hanlder_name: str
     timeout: int = 5
+    need_auth: bool = True
+    method: str = "POST"
     
     def __init__(self, exchange: aio_pika.Exchange):
         self.exchange = exchange
