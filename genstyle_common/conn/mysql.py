@@ -14,6 +14,11 @@ async_session_factory = sessionmaker(
 def get_base():
     return declarative_base()
 
+async def remake_db(Base):
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
+        await conn.run_sync(Base.metadata.create_all)
+
 async def init_db(Base):
     async with engine.begin() as conn:
         # 创建所有表
