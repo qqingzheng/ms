@@ -5,7 +5,7 @@ from ..conn.rabbitmq import get_rabbitmq_connection
 
 
 async def log(
-    type, message, error_type="", error_file="", traceback="", service_name=None
+    type, message, error_type="", error_file="", traceback="", user_id=None, request_id=None, service_name=None
 ):
     connection = await get_rabbitmq_connection()
     async with connection:
@@ -23,6 +23,8 @@ async def log(
                             "error_type": error_type,
                             "error_file": error_file,
                             "traceback": traceback,
+                            "user_id": user_id,
+                            "request_id": request_id,
                         }
                     ).encode()
                 ),
