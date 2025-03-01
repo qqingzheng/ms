@@ -1,8 +1,6 @@
 import os
-import json
-import aio_pika
 from ..conn.rabbitmq import get_rabbitmq_connection
-from ..micro_service.serve import inner_request
+from ..micro_service.inner_request import inner_request
 
 async def log(
     type, message, error_type="", error_file="", traceback="", user_id=None, request_id=None, service_name=None
