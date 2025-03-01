@@ -11,7 +11,7 @@ async def log(
         if service_name is None:  # 如果service_name为None，则使用当前服务的名称。
             service_name = os.getenv("SERVICE_NAME", "unknown")
         if type == "error" or type == "critical":
-            await inner_request("monitor", "log", {
+            response = await inner_request("monitor", "log", {
                 "type": type,
                 "message": message,
                 "error_type": error_type,
@@ -21,16 +21,21 @@ async def log(
                 "request_id": request_id,
             })
         elif type == "warning":
-            await inner_request("monitor", "log", {
+            response = await inner_request("monitor", "log", {
                 "type": type,
                 "message": message,
                 "user_id": user_id,
                 "request_id": request_id,
             })
         else:
-            await inner_request("monitor", "log", {
+            response = await inner_request("monitor", "log", {
                 "service": service_name,
                 "type": type,
                 "message": message,
             })
-
+        
+        if response["status"] == "success":
+            return True
+        else:
+            print(response["message"], flush=True)
+            return False
