@@ -12,6 +12,7 @@ async def log(
             service_name = os.getenv("SERVICE_NAME", "unknown")
         if type == "error" or type == "critical":
             response = await inner_request("monitor", "log", {
+                "service": service_name,
                 "type": type,
                 "message": message,
                 "error_type": error_type,
@@ -22,6 +23,7 @@ async def log(
             })
         elif type == "warning":
             response = await inner_request("monitor", "log", {
+                "service": service_name,
                 "type": type,
                 "message": message,
                 "user_id": user_id,
@@ -34,8 +36,4 @@ async def log(
                 "message": message,
             })
         
-        if response["status"] == "success":
-            return True
-        else:
-            print(response["message"], flush=True)
-            return False
+        print(response, flush=True)
