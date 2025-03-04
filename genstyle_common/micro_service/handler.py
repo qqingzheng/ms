@@ -7,6 +7,8 @@ from pydantic import ValidationError
 from ..schemas import ErrorResponse
 import traceback
 from ..exceptions import InnerException
+from ..logger import log
+
 class BaseHandler:
     """基础消息处理器，提供通用逻辑"""
 
@@ -50,6 +52,7 @@ class BaseHandler:
                 try:
                     body = json.dumps(response.model_dump()).encode()
                 except Exception as e:
+                    await log("error", f"返回数据中存在不可序列化的数据: {str(e)}")
                     body = json.dumps(ErrorResponse(message=f"Response data validation failed").model_dump()).encode()
                 await self.exchange.publish(
                     aio_pika.Message(
