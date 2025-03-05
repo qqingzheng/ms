@@ -38,6 +38,7 @@ class BaseHandler:
                 try:
                     request_data = self.request_model(**body)
                 except ValidationError as e:
+                    await log("info", f"请求数据验证失败: {body} 错误信息: {e}")
                     raise Exception(f"Request data validation failed: {body} Error: {e}")
 
                 # 调用具体处理函数
@@ -45,6 +46,7 @@ class BaseHandler:
             except InnerException as e:
                 response = ErrorResponse(message=f"Service inner exception: {str(e)}")
             except Exception as e:
+                await log("info", f"解析消息时发生异常: {str(e)}\n\nBacktrace: {traceback.format_exc()}")
                 response = ErrorResponse(message=f"Parse message error: {str(e)}\n\nBacktrace: {traceback.format_exc()}")
 
             # 如果有 reply_to 队列，发送响应
