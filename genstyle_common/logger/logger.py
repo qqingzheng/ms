@@ -35,5 +35,3 @@ async def log(
                 "type": type,
                 "message": message,
             })
-        
-        print(response, flush=True)
