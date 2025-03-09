@@ -39,4 +39,7 @@ elif os.environ['COS_TYPE'] == 'aws':
             Key=target,
             Body=rb_file
         )
-        return f"{os.environ['AWS_CLOUDFRONT_URL']}/{target}"
+        url = os.environ['AWS_CLOUDFRONT_URL']
+        if url.endswith('/'):
+            url = url[:-1]
+        return f"{url}/{target}"
