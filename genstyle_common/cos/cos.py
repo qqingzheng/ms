@@ -34,9 +34,9 @@ elif os.environ['COS_TYPE'] == 'aws':
         region_name=os.environ['AWS_REGION']
     )
     def upload_file(target, rb_file):
-        s3.upload_file(
-            Filename=rb_file,
+        s3.put_object(
             Bucket=os.environ['AWS_BUCKET'],
-            Key=target
+            Key=target,
+            Body=rb_file
         )
         return f"{os.environ['AWS_CLOUDFRONT_URL']}/{target}"
