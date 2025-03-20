@@ -5,7 +5,7 @@ from botocore.exceptions import ClientError
 import requests
 
 
-if os.environ['COS_TYPE'] == 'tencent':
+if os.environ['COS_TYPE'] == 'cos':
     secret_id = os.environ['COS_SECRET_ID']
     secret_key = os.environ['COS_SECRET_KEY']
     region = os.environ['COS_REGION']
