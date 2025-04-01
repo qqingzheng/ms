@@ -46,6 +46,7 @@ async def inner_request(service_name: str, queue_name: str, request: dict):
 
         except Exception as e:
             if attempt < retry_attempts - 1:
+                time.sleep(0.5)
                 print(f"内部接口访问错误，重试次数: {attempt + 1}，错误信息: {str(e)}", flush=True)
             else:
                 raise Exception("Internal Server Error")
