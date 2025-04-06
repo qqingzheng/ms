@@ -17,6 +17,7 @@ class BaseHandler:
     hanlder_name: str
     timeout: int = 5
     need_auth: bool = True
+    only_inner_request: bool = False
     method: str = "POST"
     
     def __init__(self, exchange: aio_pika.Exchange):
@@ -35,6 +36,9 @@ class BaseHandler:
                 try:
                     # 解析消息体
                     body = json.loads(message.body.decode())
+                    if self.only_inner_request:
+                        if "inner_request" not in body or body["inner_request"] != True:
+                            raise Exception("Only inner request is allowed")
                     # 校验 request_data
                     try:
                         request_data = self.request_model(**body)

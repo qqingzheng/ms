@@ -57,6 +57,7 @@ async def register_service(handlers: list[BaseHandler]):
 async def inner_request(service_name: str, queue_name: str, request: dict):
     """内部请求处理 - 同步等待微服务返回"""
     connection = await get_rabbitmq_connection()
+    request["inner_request"] = True
     try:
         async with connection:
             channel = await connection.channel()

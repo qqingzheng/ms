@@ -6,6 +6,7 @@ from ..conn.rabbitmq import get_rabbitmq_connection
 
 async def inner_request(service_name: str, queue_name: str, request: dict):
     retry_attempts = 3
+    request["inner_request"] = True
     for attempt in range(retry_attempts):
         try:
             connection = await get_rabbitmq_connection()
