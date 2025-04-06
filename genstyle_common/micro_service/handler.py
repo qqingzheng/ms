@@ -38,13 +38,13 @@ class BaseHandler:
                     body = json.loads(message.body.decode())
                     if self.only_inner_request:
                         if "inner_request" not in body or body["inner_request"] != True:
-                            raise Exception("Only inner request is allowed")
+                            raise ErrorResponse(message="Only inner request is allowed")
                     # 校验 request_data
                     try:
                         request_data = self.request_model(**body)
                     except ValidationError as e:
                         await log("info", f"请求数据验证失败: {body} 错误信息: {e}")
-                        raise Exception(f"Request data validation failed: {body} Error: {e}")
+                        raise ErrorResponse(message=f"Request data validation failed: {body} Error: {e}")
 
                     # 调用具体处理函数
                     response = await self.handle(request_data)
