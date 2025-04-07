@@ -70,4 +70,5 @@ class BaseHandler:
                     )
         except Exception as e:
             await log("critical", f"消息队列报错: {str(e)}", traceback=traceback.format_exc())
+            await message.reject(requeue=False)
             raise e
