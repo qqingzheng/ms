@@ -75,6 +75,7 @@ class BaseHandler:
                         routing_key=message.reply_to,
                     )
         except Exception as e:
-            await log("critical", f"消息队列报错: {str(e)}", traceback=traceback.format_exc())
+            # await log("critical", f"消息队列报错: {str(e)}", traceback=traceback.format_exc())
+            print(traceback.format_exc(), flush=True)
             await message.reject(requeue=False)
             raise e
