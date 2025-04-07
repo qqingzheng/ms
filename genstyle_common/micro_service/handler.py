@@ -32,8 +32,12 @@ class BaseHandler:
     ):
         """处理消息的通用逻辑"""
         print("Processing message", flush=True)
-        if message.__channel.is_closed:
+        
+        try:
+            message.channel
+        except Exception as e:
             return ErrorResponse(message="Channel closed")
+        
         try:
             
             async with message.process():
