@@ -32,19 +32,22 @@ class BaseHandler:
     ):
         """处理消息的通用逻辑"""
         try:
+            if message.channel.is_closed:
+                await message.channel.close()
+                return ErrorResponse(message="Channel closed")
             async with message.process():
                 try:
                     # 解析消息体
                     body = json.loads(message.body.decode())
                     if self.only_inner_request:
                         if "inner_request" not in body or body["inner_request"] != True:
-                            raise ErrorResponse(message="Only inner request is allowed")
+                            return ErrorResponse(message="Only inner request is allowed")
                     # 校验 request_data
                     try:
                         request_data = self.request_model(**body)
                     except ValidationError as e:
                         await log("info", f"请求数据验证失败: {body} 错误信息: {e}")
-                        raise ErrorResponse(message=f"Request data validation failed: {body} Error: {e}")
+                        return ErrorResponse(message=f"Request data validation failed: {body} Error: {e}")
 
                     # 调用具体处理函数
                     response = await self.handle(request_data)
