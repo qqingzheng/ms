@@ -78,5 +78,6 @@ class BaseHandler:
                         ),
                         routing_key=message.reply_to,
                     )
+            print("Message processed", flush=True)
         except Exception as e:
             return ErrorResponse(message="Channel closed")
