@@ -39,7 +39,6 @@ class BaseHandler:
             return ErrorResponse(message="Channel closed")
         
         try:
-            
             async with message.process():
                 try:
                     # 解析消息体
@@ -77,7 +76,4 @@ class BaseHandler:
                         routing_key=message.reply_to,
                     )
         except Exception as e:
-            # await log("critical", f"消息队列报错: {str(e)}", traceback=traceback.format_exc())
-            print(traceback.format_exc(), flush=True)
-            await message.reject(requeue=False)
-            raise e
+            return ErrorResponse(message="Channel closed")
