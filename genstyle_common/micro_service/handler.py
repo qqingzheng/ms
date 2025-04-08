@@ -34,11 +34,14 @@ class BaseHandler:
         print("Processing message", flush=True)
         
         try:
+            print("Trying to get channel", flush=True)
             message.channel
+            print("Channel got", flush=True)
         except Exception as e:
             return ErrorResponse(message="Channel closed")
         
         try:
+            print("Trying to process message", flush=True)
             async with message.process():
                 try:
                     # 解析消息体
