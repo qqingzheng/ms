@@ -4,6 +4,8 @@ from .handler import BaseHandler
 from ..conn.rabbitmq import get_rabbitmq_connection
 import aio_pika
 import time
+from ..logger.logger import log
+
 async def register_service(handlers: list[BaseHandler]):
     """注册服务"""
     print("服务注册中", flush=True)
