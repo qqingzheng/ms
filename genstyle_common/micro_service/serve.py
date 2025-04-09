@@ -5,6 +5,7 @@ from ..conn.rabbitmq import get_rabbitmq_connection
 import aio_pika
 import time
 from ..logger.logger import log
+import traceback
 
 async def register_service(handlers: list[BaseHandler]):
     """注册服务"""
