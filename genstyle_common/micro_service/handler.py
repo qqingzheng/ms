@@ -110,7 +110,7 @@ class BaseHandler:
                 # 如果需要重试，可以设置 requeue=True
                 await message.reject(requeue=False)
 
-            print("Message processed", flush=True)
+            print(f"消息处理结束：\n是否成功：{success}\n返回信息：{response.model_dump()}", flush=True)
         except Exception as e:
             print(f"Message processing error: {e}", flush=True)
             try:
