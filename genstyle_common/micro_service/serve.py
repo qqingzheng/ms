@@ -35,7 +35,7 @@ async def register_service(handlers: list[BaseHandler]):
                     routing_key=queue_name
                 )
                 
-                await channel.set_qos(prefetch_count=3)
+                await channel.set_qos(prefetch_count=1)
                 queue = await channel.declare_queue(f"{os.getenv('SERVICE_NAME')}_{handler.hanlder_name}")
                 # 注册消费者
                 await queue.consume(
