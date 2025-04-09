@@ -1,5 +1,6 @@
 import os
 import json
+import asyncio
 from typing import Type
 from pydantic import BaseModel
 import aio_pika
