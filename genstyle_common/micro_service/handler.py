@@ -34,19 +34,22 @@ class BaseHandler:
         print("Processing message", flush=True)
 
         try:
-            print("Trying to get channel", flush=True)
+            print("正在尝试获取通道", flush=True)
             channel = message.channel
-            print("Channel got", flush=True)
+            print("通道获取成功", flush=True)
         except Exception as e:
             print(f"Channel access error: {e}", flush=True)
             await log("error", f"无法访问消息通道，消息将被丢弃: {str(e)}")
             return ErrorResponse(message="Channel closed")
 
         try:
-            print("Trying to process message", flush=True)
+            print("正在处理消息", flush=True)
             try:
                 # 解析消息体
+                print("正在解析消息体", flush=True)
                 body = json.loads(message.body.decode())
+                print("消息体解析成功", flush=True)
+                
                 if self.only_inner_request:
                     if "inner_request" not in body or body["inner_request"] != True:
                         # 拒绝不符合内部请求要求的消息，不重新入队
@@ -55,7 +58,9 @@ class BaseHandler:
 
                 # 校验 request_data
                 try:
+                    print("正在校验请求数据", flush=True)
                     request_data = self.request_model(**body)
+                    print("请求数据校验成功", flush=True)
                 except ValidationError as e:
                     await log("info", f"请求数据验证失败: {body} 错误信息: {e}")
                     # 数据验证失败，拒绝消息，不重新入队
@@ -63,11 +68,13 @@ class BaseHandler:
                     return ErrorResponse(message=f"Request data validation failed: {body} Error: {e}")
 
                 # 调用具体处理函数
+                print("正在调用具体处理函数，超时时间：", self.timeout, flush=True)
                 try:
                     response = await asyncio.wait_for(self.handle(request_data), timeout=self.timeout)
                 except asyncio.TimeoutError:
                     raise InnerException("Request timeout")
-
+                print("具体处理函数调用成功", flush=True)
+                
                 # 处理成功
                 success = True
             except InnerException as e:
