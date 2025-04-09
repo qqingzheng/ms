@@ -69,11 +69,10 @@ class BaseHandler:
                     return ErrorResponse(message=f"Request data validation failed: {body} Error: {e}")
 
                 # 调用具体处理函数
-                print("正在调用具体处理函数，超时时间：", self.timeout, flush=True)
+                print(f"正在调用具体处理函数。\n内容：{request_data.model_dump()}\n超时：{self.timeout}", flush=True)
                 try:
                     response = await asyncio.wait_for(self.handle(request_data), timeout=self.timeout)
                 except asyncio.TimeoutError:
-                    await message.reject(requeue=False)
                     raise InnerException("Request timeout")
                 print("具体处理函数调用成功", flush=True)
                 
