@@ -74,6 +74,8 @@ class BaseHandler:
                     response = await asyncio.wait_for(self.handle(request_data), timeout=self.timeout)
                 except asyncio.TimeoutError:
                     raise InnerException("Request timeout")
+                except Exception as e:
+                    raise InnerException(f"Failed to call function: {str(e)}")
                 print("具体处理函数调用成功", flush=True)
                 
                 # 处理成功
