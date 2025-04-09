@@ -73,6 +73,7 @@ class BaseHandler:
                 try:
                     response = await asyncio.wait_for(self.handle(request_data), timeout=self.timeout)
                 except asyncio.TimeoutError:
+                    await message.reject(requeue=False)
                     raise InnerException("Request timeout")
                 print("具体处理函数调用成功", flush=True)
                 
