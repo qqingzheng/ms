@@ -63,7 +63,10 @@ class BaseHandler:
                     return ErrorResponse(message=f"Request data validation failed: {body} Error: {e}")
 
                 # 调用具体处理函数
-                response = await self.handle(request_data)
+                try:
+                    response = await asyncio.wait_for(self.handle(request_data), timeout=self.timeout)
+                except asyncio.TimeoutError:
+                    raise InnerException("Request timeout")
 
                 # 处理成功
                 success = True
