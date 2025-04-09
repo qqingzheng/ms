@@ -37,5 +37,7 @@ async def inner_request(service_name: str, queue_name: str, request: dict, timeo
             response = await asyncio.wait_for(future, timeout=timeout)
             print(f"内部请求「{service_name}」 {queue_name} 回复成功", flush=True)
             return response
+    except asyncio.TimeoutError as e:
+        raise e
     except Exception as e:
-        raise Exception("Internal Server Error")
+        raise InnerException(f"Failed to call function: {str(e)}")
