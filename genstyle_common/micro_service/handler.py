@@ -75,6 +75,7 @@ class BaseHandler:
                 except asyncio.TimeoutError:
                     raise InnerException("Request timeout")
                 except Exception as e:
+                    await log("error", f"{self.hanlder_name} 处理函数调用失败: {str(e)}", traceback=traceback.format_exc())
                     raise InnerException(f"Failed to call function: {str(e)}")
                 print("具体处理函数调用成功", flush=True)
                 
