@@ -1,8 +1,13 @@
 import asyncio
 import json
 import aio_pika
+import os
 import time
 from ..conn.rabbitmq import get_rabbitmq_connection
+
+QUEUE_PREFIX = os.getenv("QUEUE_PREFIX", "")
+if QUEUE_PREFIX:
+    QUEUE_PREFIX = f"{QUEUE_PREFIX}_"
 
 async def inner_request(service_name: str, queue_name: str, request: dict, timeout: int = 3):
     request["inner_request"] = True
@@ -11,7 +16,7 @@ async def inner_request(service_name: str, queue_name: str, request: dict, timeo
         async with connection:
             channel = await connection.channel()
             # 声明请求队列
-            request_queue = f"{service_name}_{queue_name}"
+            request_queue = f"{QUEUE_PREFIX}{service_name}_{queue_name}"
             # 声明回调队列
             callback_queue = await channel.declare_queue(exclusive=True)
             # 存储correlation_id和结果的变量

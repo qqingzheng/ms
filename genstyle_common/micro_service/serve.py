@@ -7,6 +7,10 @@ import time
 from ..logger.logger import log
 import traceback
 
+QUEUE_PREFIX = os.getenv("QUEUE_PREFIX", "")
+if QUEUE_PREFIX:
+    QUEUE_PREFIX = f"{QUEUE_PREFIX}_"
+
 async def register_service(handlers: list[BaseHandler]):
     """注册服务"""
     print("服务注册中", flush=True)
@@ -23,7 +27,7 @@ async def register_service(handlers: list[BaseHandler]):
                 handler_instance = handler(exchange)
                 
                 # 向api-gateway注册
-                queue_name = f"api_gate_way_registry"
+                queue_name = f"{QUEUE_PREFIX}api_gate_way_registry"
                 queue = await channel.declare_queue(queue_name)
                 await exchange.publish(
                     aio_pika.Message(
@@ -38,14 +42,14 @@ async def register_service(handlers: list[BaseHandler]):
                     routing_key=queue_name
                 )
                 
-                await channel.set_qos(prefetch_count=1)
-                queue = await channel.declare_queue(f"{os.getenv('SERVICE_NAME')}_{handler.hanlder_name}")
+                # await channel.set_qos(prefetch_count=1)
+                queue = await channel.declare_queue(f"{QUEUE_PREFIX}{os.getenv('SERVICE_NAME')}_{handler.hanlder_name}")
                 # 注册消费者
                 await queue.consume(
                     handler_instance.process_message
                 )
                 handler_instances.append(handler_instance)
-                print(f"服务已注册： {os.getenv('SERVICE_NAME')}/{handler.hanlder_name}", flush=True)
+                await log("info", f"服务已注册： {QUEUE_PREFIX}{os.getenv('SERVICE_NAME')}/{handler.hanlder_name}")
             
             try:
                 await asyncio.Future()  # 持续运行
