@@ -83,11 +83,11 @@ class BaseHandler:
                 success = True
             except InnerException as e:
                 success = False
-                response = ErrorResponse(message=f"Service inner exception: {str(e)}")
+                return ErrorResponse(message=f"Service inner exception: {str(e)}")
             except Exception as e:
                 success = False
                 await log("info", f"解析消息时发生异常: {str(e)}\n\nBacktrace: {traceback.format_exc()}")
-                response = ErrorResponse(message=f"Parse message error: {str(e)}\n\nBacktrace: {traceback.format_exc()}")
+                return ErrorResponse(message=f"Parse message error: {str(e)}\n\nBacktrace: {traceback.format_exc()}")
 
             # 如果有 reply_to 队列，发送响应
             if message.reply_to:
