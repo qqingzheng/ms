@@ -54,7 +54,8 @@ class BaseHandler:
                 if self.only_inner_request:
                     if "inner_request" not in body or body["inner_request"] != True:
                         # 拒绝不符合内部请求要求的消息，不重新入队
-                        await message.reject(requeue=False)
+                        # await message.reject(requeue=False)
+                        await message.ack()
                         return ErrorResponse(message="Only inner request is allowed")
 
                 # 校验 request_data
@@ -65,7 +66,8 @@ class BaseHandler:
                 except ValidationError as e:
                     await log("info", f"请求数据验证失败: {body} 错误信息: {e}")
                     # 数据验证失败，拒绝消息，不重新入队
-                    await message.reject(requeue=False)
+                    # await message.reject(requeue=False)
+                    await message.ack()
                     return ErrorResponse(message=f"Request data validation failed: {body} Error: {e}")
 
                 # 调用具体处理函数
@@ -73,10 +75,12 @@ class BaseHandler:
                 try:
                     response = await asyncio.wait_for(self.handle(request_data), timeout=self.timeout)
                 except asyncio.TimeoutError:
-                    raise InnerException("Request timeout")
+                    return ErrorResponse(message=f"Request timeout")
                 except Exception as e:
                     await log("error", f"{self.hanlder_name} 处理函数调用失败: {str(e)}", traceback=traceback.format_exc())
-                    raise InnerException(f"Failed to call function: {str(e)}")
+                    # await message.reject(requeue=False)
+                    await message.ack()
+                    return ErrorResponse(message=f"Failed to call function: {str(e)}")
                 print("具体处理函数调用成功", flush=True)
                 
                 # 处理成功
@@ -111,14 +115,16 @@ class BaseHandler:
             else:
                 # 处理失败，拒绝消息但不重新入队
                 # 如果需要重试，可以设置 requeue=True
-                await message.reject(requeue=False)
+                # await message.reject(requeue=False)
+                await message.ack()
 
             print(f"消息处理结束：\n是否成功：{success}\n返回信息：{response.model_dump()}", flush=True)
         except Exception as e:
             print(f"Message processing error: {e}", flush=True)
             try:
                 # 尝试拒绝消息
-                await message.reject(requeue=False)
+                # await message.reject(requeue=False)
+                await message.ack()
             except Exception as reject_error:
                 print(f"Failed to reject message: {reject_error}", flush=True)
             return ErrorResponse(message=f"Message processing failed: {str(e)}")
