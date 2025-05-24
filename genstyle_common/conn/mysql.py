@@ -15,9 +15,7 @@ engine = create_async_engine(
     pool_recycle=3600,  # 1小时后回收连接
     pool_timeout=30,  # 获取连接超时时间
     connect_args={
-        "connect_timeout": 10,  # 连接超时
-        "read_timeout": 30,  # 读取超时
-        "write_timeout": 30,  # 写入超时
+        "connect_timeout": 10  # 仅保留连接超时参数
     }
 )
 
